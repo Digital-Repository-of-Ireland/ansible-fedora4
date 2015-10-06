@@ -1,0 +1,60 @@
+---
+- name: ensure /opt/src directory exists
+  file: path=/opt/src state=directory
+
+- name: ensure /opt/build directory exists
+  file: path=/opt/build state=directory
+
+- name: check variable fedora_version is set
+  fail: msg="Please set 'fedora_version' variable in the playbook"
+  when: fedora_version is not defined
+
+- name: ensure directory /opt/fedora exists
+  file: path=/opt/fedora state=directory owner=tomcat{{ tomcat_version }} group=tomcat{{ tomcat_version }}
+
+- name: download fedora
+  get_url: url="{{ item }}" dest=/opt/fedora/fedora.war
+  with_items:
+   - "https://github.com/fcrepo4-labs/fcrepo-webapp-plus/releases/download/fcrepo-webapp-plus-{{ fedora_version }}/fcrepo-webapp-plus-rbacl-{{ fedora_version }}.war"
+
+- name: ensure directory /opt/fedora/etc exists
+  file: path=/opt/fedora/etc state=directory owner=tomcat{{ tomcat_version }} group=tomcat{{ tomcat_version }}
+
+- name: ensure directory /opt/fedora/data exists
+  file: path=/opt/fedora/data state=directory owner=tomcat{{ tomcat_version }} group=tomcat{{ tomcat_version }}
+
+- name: configure asset storage
+  template: src=modeshape.json.j2 dest=/opt/fedora/etc/modeshape.json owner=tomcat{{ tomcat_version }} group=tomcat{{ tomcat_version }}
+  when: fedora_clustered is not defined
+
+- name: configure clustered asset storage
+  template: src=modeshape.clustered.json.j2 dest=/opt/fedora/etc/modeshape.json owner=tomcat{{ tomcat_version }} group=tomcat{{ tomcat_version }}
+  when: fedora_clustered is defined
+
+- name: configure clustered jgroups
+  template: src=jgroups-fcrepo-tcp.xml.clustered.j2 dest=/opt/fedora/etc/jgroups-fcrepo-tcp.xml owner=tomcat{{ tomcat_version }} group=tomcat{{ tomcat_version }}
+  when: fedora_clustered is defined
+
+- name: configure authentication
+  template: src=repo.xml.j2 dest=/opt/fedora/etc/repo.xml owner=tomcat{{ tomcat_version }} group=tomcat{{ tomcat_version }}
+
+- name: recursively set owner and group of /opt/fedora to tomcatX
+  file: path=/opt/fedora recurse=yes state=directory owner=tomcat{{ tomcat_version }} group=tomcat{{ tomcat_version }}
+
+- name: write /etc/default/tomcat{{ tomcat_version }}
+  template: src=tomcat-defaults.j2 dest=/etc/default/tomcat{{ tomcat_version }} owner=root group=root mode=0644
+  when: fedora_clustered is not defined
+
+- name: write clustered /etc/default/tomcat{{ tomcat_version }}
+  template: src=tomcat-defaults.clustered.j2 dest=/etc/default/tomcat{{ tomcat_version }} owner=root group=root mode=0644
+  when: fedora_clustered is defined
+
+- name: write /etc/tomcat{{ tomcat_version }}/tomcat-users.xml
+  template: src=tomcat-users.xml.j2 dest=/etc/tomcat{{ tomcat_version }}/tomcat-users.xml
+
+- name: install tomcat context
+  template: src=fedora-production.j2 dest=/etc/tomcat{{ tomcat_version }}/Catalina/localhost/fedora.xml owner=tomcat{{ tomcat_version }} group=tomcat{{ tomcat_version }}
+  notify: restart tomcat
+
+- name: start and enable tomcat server
+  service: name=tomcat{{tomcat_version}} state=started enabled=yes

@@ -1,0 +1,4 @@
+---
+tomcat_user: tomcat
+tomcat_password: password
+tomcat_version: 7

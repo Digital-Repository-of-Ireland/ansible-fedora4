@@ -1,0 +1,13 @@
+---
+#role to install java
+
+- name: add ppa for java 8
+  apt_repository: repo='ppa:openjdk-r/ppa' state=present  
+
+- name: install jdk
+  apt: name={{item}} state=present update-cache=yes cache_valid_time=3600
+  with_items:
+    - openjdk-{{ java_version }}-jdk
+
+
+
