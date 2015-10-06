@@ -1,9 +1,9 @@
 # ansible-fedora4
 Ansible deployment of fedora 4, single or clustered, on Ubuntu 14.04
 
-To create in vagrant:
+## To create in vagrant:
 
-vagrant up
+`vagrant up`
 
 Clustered servers will then be located at:
 
@@ -15,10 +15,16 @@ http://fedora2.internal.tld:8080/fedora
 
 username: fedoraAdmin pass: password
 
-edit inventory/group_vars/all.yml to change software versions and passwords
+edit `inventory/group_vars/all.yml` to change software versions and passwords
 
-For single, unclustered fedora4 server, set or uncomment in all.yml:
+## Single, unclustered fedora4 server
 
-fedora_clustered = no
+set in `all.yml`:
 
-then set one hostname only in inventory/hosts file
+`fedora_clustered = no`
+
+or uncomment:
+
+`#fedora_clustered = yes`
+
+then set one hostname only in `inventory/hosts` file
