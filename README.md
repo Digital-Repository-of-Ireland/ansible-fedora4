@@ -2,6 +2,7 @@
 Ansible deployment of fedora 4, single or clustered, on Ubuntu 14.04
 
 ## Vagrant test :
+*Vagrant uses "hostmanager" plugin. Before running, install with: `vagrant plugin install vagrant-hostmanager`*
 
 To spin up two clustered fedora4 VMs, run:
 
