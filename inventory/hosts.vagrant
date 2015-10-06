@@ -2,9 +2,6 @@
 # for two clustered fedora servers, add two below
 # make sure to set or unset 'fedora_clustered' variable
 
-fedora1.internal.tld ansible_ssh_host=10.0.1.201
-fedora2.internal.tld ansible_ssh_host=10.0.1.202
-
 [fedora]
 fedora1.internal.tld
 fedora2.internal.tld
