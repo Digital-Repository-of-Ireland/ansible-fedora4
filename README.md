@@ -22,11 +22,7 @@ edit `inventory/group_vars/all.yml` to change software versions and passwords
 
 ## Single, unclustered fedora4 server
 
-set in `all.yml`:
-
-`fedora_clustered = no`
-
-or uncomment:
+uncomment in `all.yml`:
 
 `#fedora_clustered = yes`
 
