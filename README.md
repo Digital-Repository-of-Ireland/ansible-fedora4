@@ -1,7 +1,9 @@
 # ansible-fedora4
 Ansible deployment of fedora 4, single or clustered, on Ubuntu 14.04
 
-## To create in vagrant:
+## Vagrant test :
+
+To spin up two clustered fedora4 VMs, run:
 
 `vagrant up`
 
