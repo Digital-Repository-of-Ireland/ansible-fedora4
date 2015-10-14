@@ -10,6 +10,7 @@ To spin up two clustered fedora4 VMs, run:
 `vagrant up`
 
 Clustered servers will then be located at:
+*It can take a few minutes for tomcat to start fedora once deployment has finished*
 
 http://fedora1.internal.tld:8080/fedora
 
