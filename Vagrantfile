@@ -7,7 +7,7 @@ VAGRANTFILE_API_VERSION = "2"
 Vagrant::configure(VAGRANTFILE_API_VERSION) do |global_config|
   global_config.ssh.forward_agent = true
   global_config.ssh.insert_key = false  #Multi-machine vagrant setups confuse ansible provisioning due to different keys for each VM
-  global_config.ssh.private_key_path = [ "~/.ssh/id_rsa", "~/.vagrant.d/insecure_private_key" ] #vagrant needs to be told of location of a private key as we have turned off insert key above
+  global_config.ssh.private_key_path = [ "~/.vagrant.d/insecure_private_key", "~/.ssh/id_rsa" ] #vagrant needs to be told of location of a private key as we have turned off insert key above
   global_config.hostmanager.enabled = true
 
   # below we configure single VM for full stack

@@ -1,4 +1,7 @@
 ---
+- include: java.yml
+- include: tomcat.yml
+
 - name: ensure /opt/src directory exists
   file: path=/opt/src state=directory
 
@@ -26,17 +29,21 @@
 - name: configure asset storage
   template: src=modeshape.json.j2 dest=/opt/fedora/etc/modeshape.json owner=tomcat{{ tomcat_version }} group=tomcat{{ tomcat_version }}
   when: fedora_clustered is not defined
+  notify: restart tomcat
 
 - name: configure clustered asset storage
   template: src=modeshape.clustered.json.j2 dest=/opt/fedora/etc/modeshape.json owner=tomcat{{ tomcat_version }} group=tomcat{{ tomcat_version }}
   when: fedora_clustered is defined
+  notify: restart tomcat
 
 - name: configure clustered jgroups
   template: src=jgroups-fcrepo-tcp.xml.clustered.j2 dest=/opt/fedora/etc/jgroups-fcrepo-tcp.xml owner=tomcat{{ tomcat_version }} group=tomcat{{ tomcat_version }}
   when: fedora_clustered is defined
+  notify: restart tomcat
 
 - name: configure authentication
   template: src=repo.xml.j2 dest=/opt/fedora/etc/repo.xml owner=tomcat{{ tomcat_version }} group=tomcat{{ tomcat_version }}
+  notify: restart tomcat
 
 - name: recursively set owner and group of /opt/fedora to tomcatX
   file: path=/opt/fedora recurse=yes state=directory owner=tomcat{{ tomcat_version }} group=tomcat{{ tomcat_version }}
@@ -44,13 +51,12 @@
 - name: write /etc/default/tomcat{{ tomcat_version }}
   template: src=tomcat-defaults.j2 dest=/etc/default/tomcat{{ tomcat_version }} owner=root group=root mode=0644
   when: fedora_clustered is not defined
+  notify: restart tomcat
 
 - name: write clustered /etc/default/tomcat{{ tomcat_version }}
   template: src=tomcat-defaults.clustered.j2 dest=/etc/default/tomcat{{ tomcat_version }} owner=root group=root mode=0644
   when: fedora_clustered is defined
-
-- name: write /etc/tomcat{{ tomcat_version }}/tomcat-users.xml
-  template: src=tomcat-users.xml.j2 dest=/etc/tomcat{{ tomcat_version }}/tomcat-users.xml
+  notify: restart tomcat
 
 - name: install tomcat context
   template: src=fedora-production.j2 dest=/etc/tomcat{{ tomcat_version }}/Catalina/localhost/fedora.xml owner=tomcat{{ tomcat_version }} group=tomcat{{ tomcat_version }}

@@ -8,6 +8,7 @@ java_version: 8
 #tomcat user passwords
 tomcat_user: tomcat
 tomcat_password: password
+fedora_admin_user: fedoraAdmin
 fedora_admin_password: password
 
 #fedora clustered

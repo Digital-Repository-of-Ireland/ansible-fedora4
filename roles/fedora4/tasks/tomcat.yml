@@ -1,0 +1,18 @@
+---
+# Install tomcat
+
+- name: install tomcat
+  apt: pkg={{item}} state=present update-cache=yes cache_valid_time=3600
+  with_items:
+    - tomcat{{ tomcat_version }}
+    - tomcat{{ tomcat_version }}-admin
+    - libtcnative-1 # installs libapr1
+
+- name: write /etc/tomcat/{{ tomcat_version }}/tomcat-users.xml
+  template: src=tomcat-users.xml.j2 dest=/etc/tomcat{{ tomcat_version }}/tomcat-users.xml owner=root group=tomcat{{ tomcat_version }}
+  notify: restart tomcat
+
+- name: write /etc/tomcat/{{ tomcat_version }}/server.xml connectors
+  template: src=server-{{ tomcat_version }}.xml.j2 dest=/etc/tomcat{{ tomcat_version }}/server.xml owner=tomcat{{ tomcat_version }} group=tomcat{{ tomcat_version }}
+  notify: restart tomcat
+
