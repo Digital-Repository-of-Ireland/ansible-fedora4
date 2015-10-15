@@ -1,7 +1,6 @@
 # order matters!
 ---
-- hosts: all
-#  remote_user: "{{ remote_user_name }}"
+- hosts: fedora
   sudo: True
   roles:
     - fedora4
