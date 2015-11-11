@@ -24,7 +24,9 @@ JAVA_HOME=/usr/lib/jvm/java-{{ java_version }}-openjdk-amd64
 # response time). If you use that option and you run Tomcat on a machine with
 # exactly one CPU chip that contains one or two cores, you should also add
 # the "-XX:+CMSIncrementalMode" option.
-JAVA_OPTS="-Djava.awt.headless=true -Dfile.encoding=UTF-8 -server -Xms512m -Xmx1024m -XX:NewSize=256m -XX:MaxNewSize=256m -XX:PermSize=256m -XX:MaxPermSize=256m -XX:+DisableExplicitGC -Dfcrepo.home=/opt/fedora/data -Dfcrepo.modeshape.configuration=file:///opt/fedora/etc/modeshape.json -Dfcrepo.spring.repo.configuration=file:///opt/fedora/etc/repo.xml -Xmx1024m -XX:MaxPermSize=256m -Djava.net.preferIPv4Stack=true -Djgroups.udp.mcast_addr=239.42.42.42 -Dfcrepo.ispn.jgroups.configuration=/opt/fedora/etc/jgroups-fcrepo-tcp.xml -Dfcrepo.ispn.configuration=/var/lib/tomcat7/webapps/fedora/WEB-INF/classes/config/infinispan/clustered/infinispan.xml"
+JAVA_OPTS="-Djava.awt.headless=true -Dfile.encoding=UTF-8 -server -Xms512m -Xmx1024m -XX:NewSize=256m -XX:MaxNewSize=256m -XX:PermSize=256m -XX:MaxPermSize=256m -XX:+DisableExplicitGC -Dfcrepo.home=/opt/fedora/data -Dfcrepo.modeshape.configuration=file:///opt/fedora/etc/modeshape.json  -Xmx1024m -XX:MaxPermSize=256m -Djava.net.preferIPv4Stack=true -Djgroups.udp.mcast_addr=239.42.42.42 -Dfcrepo.ispn.jgroups.configuration=/opt/fedora/etc/jgroups-fcrepo-tcp.xml -Dfcrepo.ispn.configuration=/opt/fedora/etc/infinispan.xml"
+#JAVA_OPTS="${JAVA_OPTS} -Dfcrepo.spring.repo.configuration=file:///opt/fedora/etc/repo.xml"
+
 
 # To enable remote debugging uncomment the following line.
 # You will then be able to use a java debugger on port 8000.

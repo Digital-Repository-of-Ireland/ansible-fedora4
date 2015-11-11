@@ -1,5 +1,5 @@
 ---
-fedora_version: 4.2.0
+fedora_version: 4.4.1
 tomcat_version: 7
 java_version: 8
 tomcat_user: tomcat

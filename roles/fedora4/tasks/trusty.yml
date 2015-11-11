@@ -19,6 +19,11 @@
   get_url: url="{{ item }}" dest=/opt/fedora/fedora.war
   with_items:
    - "https://github.com/fcrepo4-labs/fcrepo-webapp-plus/releases/download/fcrepo-webapp-plus-{{ fedora_version }}/fcrepo-webapp-plus-rbacl-{{ fedora_version }}.war"
+  when: fedora_version != "4.4.1"
+
+- name: download fedora 4.4.1
+  copy: src=fcrepo-4.4.1.war dest=/opt/fedora/fedora.war
+  when: fedora_version == "4.4.1"
 
 - name: ensure directory /opt/fedora/etc exists
   file: path=/opt/fedora/etc state=directory owner=tomcat{{ tomcat_version }} group=tomcat{{ tomcat_version }}
@@ -36,14 +41,21 @@
   when: fedora_clustered is defined
   notify: restart tomcat
 
+- name: configure infinispan.xml
+  template: src=infinispan.clustered.xml.j2 dest=/opt/fedora/etc/infinispan.xml owner=tomcat{{ tomcat_version }} group=tomcat{{ tomcat_version }}
+  when: fedora_clustered is defined
+  notify: restart tomcat
+
+
+
 - name: configure clustered jgroups
   template: src=jgroups-fcrepo-tcp.xml.clustered.j2 dest=/opt/fedora/etc/jgroups-fcrepo-tcp.xml owner=tomcat{{ tomcat_version }} group=tomcat{{ tomcat_version }}
   when: fedora_clustered is defined
   notify: restart tomcat
 
-- name: configure authentication
-  template: src=repo.xml.j2 dest=/opt/fedora/etc/repo.xml owner=tomcat{{ tomcat_version }} group=tomcat{{ tomcat_version }}
-  notify: restart tomcat
+#- name: configure authentication
+#  template: src=repo.xml.j2 dest=/opt/fedora/etc/repo.xml owner=tomcat{{ tomcat_version }} group=tomcat{{ tomcat_version }}
+#  notify: restart tomcat
 
 - name: recursively set owner and group of /opt/fedora to tomcatX
   file: path=/opt/fedora recurse=yes state=directory owner=tomcat{{ tomcat_version }} group=tomcat{{ tomcat_version }}
